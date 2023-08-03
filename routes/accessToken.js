@@ -6,8 +6,11 @@ const {
 } = require("../controllers/accessTokenController");
 const route = express.Router();
 
-route.get("/allTokens", authenticate, getAllTokens);
+// route.get("/allTokens", authenticate, getAllTokens);
 
-route.post("/addToken", authenticate, postToken);
+// route.post("/addToken", authenticate, postToken);
+route.get("/allTokens", getAllTokens);
+
+route.post("/addToken", postToken);
 
 module.exports = route;
