@@ -27,7 +27,7 @@ app.use(
       "http://localhost:5501",
       "http://localhost:3000",
       "https://admingst.netlify.app",
-      // "https://solvegst.onrender.com/",
+      "https://solvegst.onrender.com",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
