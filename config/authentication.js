@@ -22,7 +22,7 @@ const signup = async (req, res, next) => {
     phone,
     accessCode,
     department,
-    screenDimensions,
+    phoneSpec,
   } = req.body;
   if (
     firstName == "" ||
@@ -32,7 +32,7 @@ const signup = async (req, res, next) => {
     phone == "" ||
     accessCode == "" ||
     department == "" ||
-    screenDimensions == ""
+    phoneSpec == ""
   ) {
     console.log("fill in all details");
     res.send({ message: "Fill in all details", status: "error" });
@@ -114,7 +114,7 @@ const signup = async (req, res, next) => {
             var query = `UPDATE accesstokens SET tokenUser = "${
               firstName + "" + lastName
             }",
-               tokenUserId = '${userId}', status='USED', userDevice='${screenDimensions}' WHERE accessToken = '${accessCode}';`;
+               tokenUserId = '${userId}', status='USED', userDevice='${phoneSpec}' WHERE accessToken = '${accessCode}';`;
 
             database.query(query, (err, result) => {
               if (err) throw err;
@@ -131,9 +131,9 @@ const signup = async (req, res, next) => {
 
 //login
 const login = async (req, res, next) => {
-  var { email, password, screenDimensions } = req.body;
+  var { email, password, phoneSpec } = req.body;
   // console.log(req.body);
-  if (email == "" || password == "" || screenDimensions == "") {
+  if (email == "" || password == "" || phoneSpec == "") {
     console.log("fill in all details");
     res.send({ message: "Fill in all details", status: "error" });
     return;
@@ -145,50 +145,44 @@ const login = async (req, res, next) => {
       res.json({ message: "User not found", status: "error" });
     } else {
       var checkUserAccess = "SELECT * FROM accesstokens WHERE userDevice = ?";
-      database.query(
-        checkUserAccess,
-        [screenDimensions],
-        async (err, resultToken) => {
-          if (resultToken.length == 0) {
-            res.json({ message: "Device has no access", status: "error" });
-            // return;
-          } else {
-            // console.log(resultToken, screenDimensions);
-            // console.log(result[0].password);
-            await bcrypt
-              .compare(password, result[0].password)
-              .then((resultt) => {
-                if (!resultt) {
-                  console.log("Incorrect password");
-                  res.json({ message: "Incorrect password", status: "error" });
-                } else {
-                  const accessToken = jwt.sign(
-                    {
-                      email: result[0].email,
-                      id: result[0].id,
-                      firstName: result[0].firstName,
-                      lastName: result[0].lastName,
-                    },
-                    process.env.ACCESS_TOKEN_SECRET,
-                    { expiresIn: "10d" }
-                  );
-                  res.cookie("jwt", accessToken, {
-                    maxAge: 3600 * 1000 * 24 * 365 * 100,
-                    withCredentials: true,
-                    httpOnly: true,
-                  });
-                  const allObj = {
-                    ...result[0],
-                    status: "success",
-                    redirect: "true",
-                    accessToken: accessToken,
-                  };
-                  res.json(allObj);
-                }
+      database.query(checkUserAccess, [phoneSpec], async (err, resultToken) => {
+        if (resultToken.length == 0) {
+          res.json({ message: "Device has no access", status: "error" });
+          // return;
+        } else {
+          // console.log(resultToken, screenDimensions);
+          // console.log(result[0].password);
+          await bcrypt.compare(password, result[0].password).then((resultt) => {
+            if (!resultt) {
+              console.log("Incorrect password");
+              res.json({ message: "Incorrect password", status: "error" });
+            } else {
+              const accessToken = jwt.sign(
+                {
+                  email: result[0].email,
+                  id: result[0].id,
+                  firstName: result[0].firstName,
+                  lastName: result[0].lastName,
+                },
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: "10d" }
+              );
+              res.cookie("jwt", accessToken, {
+                maxAge: 3600 * 1000 * 24 * 365 * 100,
+                withCredentials: true,
+                httpOnly: true,
               });
-          }
+              const allObj = {
+                ...result[0],
+                status: "success",
+                redirect: "true",
+                accessToken: accessToken,
+              };
+              res.json(allObj);
+            }
+          });
         }
-      );
+      });
     }
   });
 };
