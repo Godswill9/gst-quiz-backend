@@ -35,7 +35,17 @@ const signup = async (req, res, next) => {
     screenDimensions == ""
   ) {
     console.log("fill in all details");
+    res.send({ message: "Fill in all details", status: "error" });
     return;
+  } else if (!email.includes("@") || !email.includes(".")) {
+    res.send({ message: "Invalid email", status: "error" });
+  } else if (phone.length !== 11) {
+    res.send({ message: "Invalid phone number", status: "error" });
+  } else if (password.length < 7) {
+    res.send({
+      message: "Password should have at least 7 characters",
+      status: "error",
+    });
   } else {
     var salt = await bcrypt.genSalt(10);
     if (!salt) {
@@ -54,7 +64,7 @@ const signup = async (req, res, next) => {
       "SELECT * FROM accesstokens WHERE accessToken = ? AND status = ?";
     database.query(checkAccess, [accessCode, "FALSE"], (err, resultToken) => {
       if (resultToken.length == 0) {
-        res.json({ message: "invalid access token" });
+        res.json({ message: "Invalid access token", status: "error" });
         return;
       } else {
         //CHECK FOR STUDENT
@@ -62,7 +72,11 @@ const signup = async (req, res, next) => {
         database.query(check, [email], (err, result) => {
           if (result.length !== 0) {
             console.log("user has registered with us");
-            res.json({ message: "user already exists", redirect: "true" });
+            res.json({
+              message: "User already exists",
+              redirect: "true",
+              status: "error",
+            });
             return;
           } else {
             var createUser = `INSERT INTO users (
@@ -104,7 +118,9 @@ const signup = async (req, res, next) => {
 
             database.query(query, (err, result) => {
               if (err) throw err;
-              res.status(200).json({ message: "user fully registered" });
+              res
+                .status(200)
+                .json({ message: "User fully registered", status: "good" });
             });
           }
         });
@@ -116,12 +132,17 @@ const signup = async (req, res, next) => {
 //login
 const login = async (req, res, next) => {
   var { email, password, screenDimensions } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
+  if (email == "" || password == "" || screenDimensions == "") {
+    console.log("fill in all details");
+    res.send({ message: "Fill in all details", status: "error" });
+    return;
+  }
   var checkForUser = "SELECT * FROM users WHERE email = ?";
   database.query(checkForUser, [email], async (err, result) => {
     if (result.length == 0) {
       console.log("user not found");
-      res.json({ message: "user not found" });
+      res.json({ message: "User not found", status: "error" });
     } else {
       var checkUserAccess = "SELECT * FROM accesstokens WHERE userDevice = ?";
       database.query(
@@ -129,7 +150,7 @@ const login = async (req, res, next) => {
         [screenDimensions],
         async (err, resultToken) => {
           if (resultToken.length == 0) {
-            res.json({ message: "device has no access" });
+            res.json({ message: "Device has no access", status: "error" });
             // return;
           } else {
             // console.log(resultToken, screenDimensions);
@@ -138,8 +159,8 @@ const login = async (req, res, next) => {
               .compare(password, result[0].password)
               .then((resultt) => {
                 if (!resultt) {
-                  console.log("incorrect password");
-                  res.json({ message: "incorrect password" });
+                  console.log("Incorrect password");
+                  res.json({ message: "Incorrect password", status: "error" });
                 } else {
                   const accessToken = jwt.sign(
                     {
