@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const http = require("http");
-const socketIO = require("socket.io");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -16,8 +15,6 @@ const accessToken = require("./routes/accessToken");
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server);
-
 app.use(
   cors({
     origin: [
