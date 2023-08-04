@@ -21,27 +21,7 @@ route.post("/allQuestions", getAllQuestions);
 route.post("/client/allQuestions", authenticate, getAllQuestions);
 
 //getting a random question
-route.get(
-  "/question/:id",
-  (req, res, next) => {
-    var cookie = req.cookies.jwt;
-    if (!cookie) {
-      res.json({ message: "login again" });
-      console.log({ message: "login again" });
-    } else {
-      jwt.verify(cookie, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) {
-          console.log({ message: "login again" });
-          return;
-        } else {
-          req.userId = user.id;
-          next();
-        }
-      });
-    }
-  },
-  getQuestionById
-);
+route.get("/question/:id", getQuestionById);
 
 //getting a donors Questions
 // route.get("/myQuestions/:id", authenticate, getDonorsQuestions);
