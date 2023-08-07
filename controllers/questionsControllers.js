@@ -18,7 +18,7 @@ exports.postQuestion = async (req, res, next) => {
 
       database.query(query, (err, result) => {
         if (err) throw err;
-        res.status(200).json({ message: "data updated" });
+        res.status(200).json({ message: "data updated successfully" });
       });
     } catch (err) {
       next(err);
