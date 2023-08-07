@@ -48,8 +48,8 @@ exports.postQuestion = async (req, res, next) => {
 // Get all Questions
 exports.getAllQuestions = async (req, res, next) => {
   try {
-    const { course } = req.body;
-    const query = `SELECT * FROM questiondb WHERE course = '${course}'`;
+    const { course, year } = req.body;
+    const query = `SELECT * FROM questiondb WHERE course = '${course}' AND year= '${year}' `;
     database.query(query, (err, result) => {
       if (err) throw err;
       if (result.length == 0) {
