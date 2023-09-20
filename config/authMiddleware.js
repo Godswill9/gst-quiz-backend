@@ -10,25 +10,36 @@ const signup = async (req, res, next) => {
     return;
   }
   console.log(req.body);
-  var adminId = v4();
+  var userId = v4();
   // console.log(req.body)
   var date = new Date();
-  var { firstName, lastName, email, password, phone, role } = req.body;
+  var {
+    firstName,
+    lastName,
+    email,
+    password,
+    phoneNumber,
+    nationality,
+    securityQuestion,
+    securityAnswer,
+    address,
+  } = req.body;
   if (
     firstName == "" ||
     lastName == "" ||
     email == "" ||
     password == "" ||
-    phone == "" ||
-    role == ""
+    phoneNumber == "" ||
+    nationality == ""
   ) {
     console.log("fill in all details");
     res.send(500);
     return;
-  } else if (password.length < 7) {
-    res.json({ message: "password must be greater than 7 chars" });
-    return;
   } else {
+    if (password.length < 7) {
+      res.json({ message: "password must be greater than 7 chars" });
+      return;
+    }
     var salt = await bcrypt.genSalt(10);
     if (!salt) {
       console.log("Error generating salt");
@@ -41,47 +52,54 @@ const signup = async (req, res, next) => {
       console.log("Error hashing password:", err);
       return;
     }
-    //CHECK FOR ADMIN
-    var check = "SELECT * FROM admins WHERE email = ? AND adminRole=?";
-    database.query(check, [email, role], (err, result) => {
+    var check = "SELECT * FROM all_buyers WHERE email = ?";
+    database.query(check, [email], (err, result) => {
       if (result.length !== 0) {
         console.log("user has registered with us");
         res.json({ message: "user already exists", redirect: "true" });
         return;
       } else {
-        var createAdmin = `INSERT INTO admins (
-          admin_Id,
-            firstName,
-            lastName,
-            adminRole, 
-            email, 
-            password ,
-            verified ,
-            phone,
-            created_at,
-            updated_at
-             ) VALUES?`;
+        var createUser = `INSERT INTO all_buyers (
+          id,
+          firstName,
+          lastName, 
+          email,
+          password,
+          phone, 
+          created_at,
+          updated_at,
+          security_question,
+          security_answer,
+          nationality,
+          wallet_balance,
+          connects,
+          address,
+          verified,
+          affiliate) VALUES?`;
         var values = [
           [
-            adminId,
+            userId,
             firstName,
             lastName,
-            role,
             email,
             hashed,
-            "not verified",
-            phone,
+            phoneNumber,
             date,
             date,
+            securityQuestion,
+            securityAnswer,
+            nationality,
+            0,
+            30,
+            address,
+            "FALSE",
+            "FALSE",
           ],
         ];
-        database.query(createAdmin, [values], (err, result) => {
-          if (err) {
-            res.status(500);
-            console.log(err);
-          }
+        database.query(createUser, [values], (err, result) => {
+          if (err) throw err;
           console.log(result);
-          res.send({ message: "admin registered" });
+          res.send({ message: "user registered" });
         });
       }
     });
@@ -90,15 +108,15 @@ const signup = async (req, res, next) => {
 
 //login
 const login = async (req, res, next) => {
-  var { email, password, role } = req.body;
-  console.log(req.body);
-  var checkForUser = "SELECT * FROM admins WHERE email = ? AND adminRole=?";
-  database.query(checkForUser, [email, role], async (err, result) => {
+  var { email, password } = req.body;
+  // console.log(req.body);
+  var checkForUser = "SELECT * FROM all_buyers WHERE email = ?";
+  database.query(checkForUser, [email], async (err, result) => {
     if (result.length == 0) {
       console.log("user not found");
       res.json({ message: "user not found" });
     } else {
-      // console.log(result[0].password);
+      console.log(result[0].password);
       await bcrypt.compare(password, result[0].password).then((resultt) => {
         if (!resultt) {
           console.log("incorrect password");
@@ -123,7 +141,6 @@ const login = async (req, res, next) => {
             ...result[0],
             status: "success",
             redirect: "true",
-            accessToken: accessToken,
           };
           res.json(allObj);
         }
@@ -131,5 +148,6 @@ const login = async (req, res, next) => {
     }
   });
 };
+// };
 
 module.exports = { signup, login };

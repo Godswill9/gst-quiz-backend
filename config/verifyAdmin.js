@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
 
 const authenticate = async (req, res, next) => {
-  // var cookie = req.cookies.jwt;
-  var { cookie } = req.body;
+  var cookie = req.cookies.jwt;
+  // var { cookie } = req.body;
+  // console.log(req.cookies.jwt);
   if (!cookie) {
     res.json({ message: "login again" });
     console.log({ message: "login again" });
