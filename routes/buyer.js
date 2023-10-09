@@ -8,7 +8,7 @@ const {
 const { authenticate } = require("../config/verifyToken");
 const route = express.Router();
 
-route.get("/allBuyers", authenticate, getAllbuyers);
+route.get("/allBuyers/:storeName", authenticate, getAllbuyers);
 
 route.get("/buyer/:id", authenticate, getBuyerById);
 

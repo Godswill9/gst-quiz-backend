@@ -33,7 +33,7 @@ const signup = async (req, res, next) => {
     nationality == ""
   ) {
     console.log("fill in all details");
-    res.send(500);
+    res.json({ message: "fill in all details" });
     return;
   } else {
     if (password.length < 7) {
@@ -75,7 +75,8 @@ const signup = async (req, res, next) => {
           connects,
           address,
           verified,
-          affiliate) VALUES?`;
+          affiliate,
+          storeName) VALUES?`;
         var values = [
           [
             userId,
@@ -94,12 +95,13 @@ const signup = async (req, res, next) => {
             address,
             "FALSE",
             "FALSE",
+            "Best storezz",
           ],
         ];
         database.query(createUser, [values], (err, result) => {
           if (err) throw err;
           console.log(result);
-          res.send({ message: "user registered" });
+          res.send({ message: "user registered", status: "success" });
         });
       }
     });

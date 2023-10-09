@@ -21,7 +21,7 @@ const multer = require("multer");
 // var upload = multer({ storage: storage });
 
 //POST A Product
-route.post("/postProduct", postProduct);
+route.post("/postProduct", authenticate, postProduct);
 
 route.get("/allProducts", authenticate, getAllProducts);
 

@@ -12,7 +12,7 @@ const authenticate = async (req, res, next) => {
         res.send({ message: "login again" });
         return;
       } else {
-        req.userId = user.id;
+        // req.userId = user.id;
         next();
       }
     });

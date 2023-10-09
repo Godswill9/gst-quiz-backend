@@ -16,6 +16,10 @@ const signup = require("./routes/signup");
 const signupSeller = require("./routes/signupSeller");
 const signupAdmin = require("./routes/signupAdmin");
 const transaction = require("./routes/transaction");
+const verifyMe = require("./routes/verify");
+const carts = require("./routes/carts");
+const homepageGoods = require("./routes/homepageGoods");
+const order=require("./routes/order")
 const multer = require("multer");
 const app = express();
 const server = http.createServer(app);
@@ -51,10 +55,14 @@ app.use("/api", signupAdmin);
 app.use("/api", login);
 app.use("/api", loginSeller);
 app.use("/api", loginAdmin);
+app.use("/api", verifyMe);
 app.use("/api", buyers);
 app.use("/api", sellers);
 app.use("/api", products);
 app.use("/api", transaction);
+app.use("/api", carts);
+app.use("/api", homepageGoods);
+app.use('/api', order)
 
 const port = process.env.PORT || 3000;
 console.log(new Date());

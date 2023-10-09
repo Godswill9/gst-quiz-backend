@@ -22,7 +22,7 @@ exports.getAllsellers = async (req, res, next) => {
 exports.getSellerById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log(id);
+    // console.log(id);
     const query = "SELECT * FROM all_sellers WHERE id=?";
     database.query(query, [id], (err, result) => {
       if (err) throw err;

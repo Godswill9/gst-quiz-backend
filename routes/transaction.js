@@ -1,14 +1,9 @@
 const express = require("express");
 const route = express.Router();
 const { authenticate } = require("../config/verifyToken");
-const {
-  fundWallet,
-  sendMoney,
-  withdrawMoney,
-} = require("../controllers/transactionController");
+const initializePayment = require("../controllers/transactionController"); // import the controller
 
-route.post("/addFunds/:id", fundWallet);
-route.post("/sendFunds/:id", sendMoney);
-route.post("/withdrawFunds/:id", withdrawMoney);
+route.post("/acceptpayment", initializePayment.acceptPayment);
+route.get("/confirmPayment/:ref", initializePayment.checkPayment);
 
 module.exports = route;

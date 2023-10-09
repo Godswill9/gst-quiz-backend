@@ -2,9 +2,10 @@ const database = require("../config/database");
 
 // Get all buyers
 exports.getAllbuyers = async (req, res, next) => {
+  const { storeName } = req.params;
   try {
-    const query = "SELECT * FROM all_buyers";
-    database.query(query, (err, result) => {
+    const query = "SELECT * FROM all_buyers where storeName=?";
+    database.query(query, [storeName], (err, result) => {
       if (err) throw err;
       if (result.length == 0) {
         res.send({ message: "no buyers" });
