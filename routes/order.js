@@ -8,7 +8,7 @@ const {
 const route = express.Router();
 
 route.post("/order", authenticate, createNewOrder);
-route.get("/fetchMyOrders", authenticate, fetchMyOrders);
-route.put("/confirmAnOrder", authenticate, updateAnOrder);
+route.get("/fetchMyOrders/:id", authenticate, fetchMyOrders);
+route.put("/confirmAnOrder/:id", authenticate, updateAnOrder);
 
 module.exports = route;

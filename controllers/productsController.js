@@ -174,7 +174,7 @@ exports.getAllProducts = async (req, res, next) => {
 
 // Get a specific Product by ID
 exports.getProductById = (req, res, next) => {
-  try {
+  try { 
     const { id } = req.params;
     const query = "SELECT * FROM all_products WHERE product_id=?";
     console.log(id);

@@ -220,8 +220,9 @@ const payStack = {
   acceptPayment: async (req, res) => {
     try {
       // request body from the clients
-      const email = req.body.email;
-      const amount = Number(req.body.amount);
+      const email = req.body.obj.email;
+      const amount = Number(req.body.obj.amount);
+      const { order_id } = req.body;
       // params
       const params = JSON.stringify({
         email: email,
@@ -249,6 +250,12 @@ const payStack = {
           apiRes.on("end", () => {
             // console.log(JSON.parse(data));
             const resultPaystack = JSON.parse(data);
+            var query = `UPDATE all_orders SET ref = '${resultPaystack.data.reference}' WHERE item_id = '${order_id}';`;
+            database.query(query, (err, result) => {
+              if (err) throw err;
+              res.status(200).json(JSON.parse(data));
+              console.log("updated");
+            });
             // var createTransaction = `INSERT INTO transactions (
             //   transaction_id,
             //   product_id,
@@ -288,7 +295,7 @@ const payStack = {
             //   console.log(result);
             //   res.send({ message: "user registered", status: "success" });
             // });
-            return res.status(200).json(JSON.parse(data));
+            // return res.status(200).json(JSON.parse(data));
           });
         })
         .on("error", (error) => {
@@ -304,6 +311,7 @@ const payStack = {
   },
   checkPayment: async (req, res) => {
     const { ref } = req.params;
+    console.log(ref);
     try {
       const options = {
         hostname: "api.paystack.co",

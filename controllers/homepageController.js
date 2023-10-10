@@ -215,20 +215,22 @@ exports.checkProduct = async (req, res, next) => {
 // };
 
 // //delete Product
-// exports.deleteItem = async (req, res, next) => {
-//   const { id } = req.params;
-//   try {
-//     var deleteQuery = `DELETE FROM homepage_items WHERE item_id = '${id}'`;
-//     database.query(deleteQuery, (err, result) => {
-//       if (err) {
-//         console.error(err); // Log the error to the console
-//         res.status(500).send({ message: "An error occurred" });
-//       } else {
-//         // console.log(result);
-//         res.status(200).json({ message: "item deleted", result: result });
-//       }
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+exports.deleteFromHomePage = async (req, res, next) => {
+  const { id, title } = req.params;
+  try {
+    var deleteQuery = `DELETE FROM allhomepage WHERE productId = '${id}' AND title='${title}';`;
+    database.query(deleteQuery, (err, result) => {
+      if (err) {
+        console.error(err); // Log the error to the console
+        res.status(500).send({ message: "An error occurred" });
+      } else {
+        // console.log(result);
+        res
+          .status(200)
+          .json({ message: "item removed from homepage", result: result });
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+};

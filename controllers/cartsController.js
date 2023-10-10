@@ -18,6 +18,7 @@ exports.addToCart = async (req, res, next) => {
       sellerId,
       productId,
     } = req.body;
+    console.log(req.body);
 
     const checkQuery =
       "SELECT * FROM cart_items WHERE product_id = ? and buyerId =? ";
@@ -97,13 +98,27 @@ exports.getAllCarts = async (req, res, next) => {
 // Update a Product
 exports.updateItem = async (req, res, next) => {
   //   const { id } = req.params;
-  const { quantity, buyerId, item_id } = req.body;
+  const { quantity, buyerId, item_id, product_id } = req.body;
   const date = new Date();
   try {
-    var query = `UPDATE cart_items SET item_quantity=${quantity} WHERE item_id = '${item_id}' AND buyerId='${buyerId}';`;
-    database.query(query, (err, result) => {
+    const query1 = "SELECT * FROM all_products where product_id=?";
+    database.query(query1, [product_id], (err, result) => {
       if (err) throw err;
-      res.status(200).json({ message: "cart updated", result: result });
+      if (result.length == 0) {
+        res.send({ message: "not available" });
+        return;
+      } else {
+        if (quantity > result[0].item_quantity) {
+          res.send({ message: "end of stock" });
+          return;
+        } else {
+          var query = `UPDATE cart_items SET item_quantity=${quantity} WHERE item_id = '${item_id}' AND buyerId='${buyerId}';`;
+          database.query(query, (err, result) => {
+            if (err) throw err;
+            res.status(200).json({ message: "cart updated", result: result });
+          });
+        }
+      }
     });
   } catch (err) {
     next(err);
