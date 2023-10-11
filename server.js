@@ -18,8 +18,10 @@ const signupAdmin = require("./routes/signupAdmin");
 const transaction = require("./routes/transaction");
 const verifyMe = require("./routes/verify");
 const carts = require("./routes/carts");
+const whatsappEmailOrder = require("./routes/whatappEmail");
 const homepageGoods = require("./routes/homepageGoods");
-const order=require("./routes/order")
+const order = require("./routes/order");
+const service = require("./routes/services");
 const multer = require("multer");
 const app = express();
 const server = http.createServer(app);
@@ -62,7 +64,9 @@ app.use("/api", products);
 app.use("/api", transaction);
 app.use("/api", carts);
 app.use("/api", homepageGoods);
-app.use('/api', order)
+app.use("/api", order);
+app.use("/api", whatsappEmailOrder);
+app.use("/api", service);
 
 const port = process.env.PORT || 3000;
 console.log(new Date());
