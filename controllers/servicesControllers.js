@@ -104,7 +104,7 @@ exports.sendServiceOrder = async (req, res, next) => {
           <tr>
             <td style="padding: 20px;">
               <div style="background-color: #fff; padding: 20px;">
-                <h2 style="color: orange;"> Your order has placed!</h2>
+                <h2 style="color: orange;"> Your order has been placed!</h2>
                 <p style="color: #333;">Pls allow 24 hours to confirm your order</p>
 
                 <p style="color: #333;">John Doe<br>123 Main Street<br>Your City, State 12345<br>United States</p>

@@ -250,12 +250,13 @@ const payStack = {
           apiRes.on("end", () => {
             // console.log(JSON.parse(data));
             const resultPaystack = JSON.parse(data);
-            var query = `UPDATE all_orders SET ref = '${resultPaystack.data.reference}' WHERE item_id = '${order_id}';`;
-            database.query(query, (err, result) => {
-              if (err) throw err;
-              res.status(200).json(JSON.parse(data));
-              console.log("updated");
-            });
+            // return res.status(200).json(JSON.parse(data));
+            // var query = `UPDATE all_orders SET ref = '${resultPaystack.data.reference}' WHERE item_id = '${order_id}';`;
+            // database.query(query, (err, result) => {
+            //   if (err) throw err;
+            //   res.status(200).json(JSON.parse(data));
+            //   console.log("updated");
+            // });
             // var createTransaction = `INSERT INTO transactions (
             //   transaction_id,
             //   product_id,
@@ -295,7 +296,7 @@ const payStack = {
             //   console.log(result);
             //   res.send({ message: "user registered", status: "success" });
             // });
-            // return res.status(200).json(JSON.parse(data));
+            return res.status(200).json(JSON.parse(data));
           });
         })
         .on("error", (error) => {
@@ -331,8 +332,24 @@ const payStack = {
             data += chunk;
           });
           apiRes.on("end", () => {
-            console.log(JSON.parse(data));
-            return res.status(200).json(JSON.parse(data));
+            console.log(JSON.parse(data).data);
+            // res
+            //   .status(200)
+            //   .json({ PaymentStatus: JSON.parse(data).data.status });
+            if (JSON.parse(data).data.status === "success") {
+              res.status(200).json({
+                message: "your payment has been approved",
+                status: "payment success",
+                ref: ref,
+              });
+              console.log(JSON.parse(data).data.status);
+            } else {
+              res.status(200).json({
+                message: "your payment has NOT been approved",
+                status: "payment failed",
+              });
+              console.log(JSON.parse(data).data.status);
+            }
           });
         })
         .on("error", (error) => {

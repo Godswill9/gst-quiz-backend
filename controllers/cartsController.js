@@ -95,7 +95,7 @@ exports.getAllCarts = async (req, res, next) => {
   }
 };
 
-// Update a Product
+// Update a cart
 exports.updateItem = async (req, res, next) => {
   //   const { id } = req.params;
   const { quantity, buyerId, item_id, product_id } = req.body;
@@ -109,13 +109,15 @@ exports.updateItem = async (req, res, next) => {
         return;
       } else {
         if (quantity > result[0].item_quantity) {
-          res.send({ message: "end of stock" });
+          res.send({ message: "End of stock. Only one left" });
           return;
         } else {
           var query = `UPDATE cart_items SET item_quantity=${quantity} WHERE item_id = '${item_id}' AND buyerId='${buyerId}';`;
           database.query(query, (err, result) => {
             if (err) throw err;
-            res.status(200).json({ message: "cart updated", result: result });
+            res
+              .status(200)
+              .json({ message: "cart updated, total updated", result: result });
           });
         }
       }

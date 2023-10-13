@@ -21,6 +21,7 @@ const carts = require("./routes/carts");
 const whatsappEmailOrder = require("./routes/whatappEmail");
 const homepageGoods = require("./routes/homepageGoods");
 const order = require("./routes/order");
+const notification = require("./routes/notifications");
 const service = require("./routes/services");
 const multer = require("multer");
 const app = express();
@@ -67,6 +68,7 @@ app.use("/api", homepageGoods);
 app.use("/api", order);
 app.use("/api", whatsappEmailOrder);
 app.use("/api", service);
+app.use("/api", notification);
 
 const port = process.env.PORT || 3000;
 console.log(new Date());

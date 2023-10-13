@@ -66,8 +66,8 @@ exports.sendOrderEmail = async (req, res, next) => {
               <tr>
                 <td style="padding: 20px;">
                   <div style="background-color: #fff; padding: 20px;">
-                    <h2 style="color: #333;"> You have an order!</h2>
-                    <p style="color: #333;">Pls allow 48 hours to deliver your order</p>
+                    <h2 style="color: #333;"> Thanks for the order!</h2>
+                    <p style="color: #333;">Pls allow 48 hours to recieve your order</p>
                     <table role="presentation" border="1" cellspacing="0" cellpadding="10" width="100%" style="border-collapse: collapse; color: #333;">
                       <thead style="background-color: #333; color: #fff;">
                         <tr>
@@ -147,7 +147,10 @@ exports.sendOrderEmail = async (req, res, next) => {
                         <td style="padding: 20px;">
                           <div style="background-color: #fff; padding: 20px;">
                             <h2 style="color: #333;"> You have an order!</h2>
-                            <p style="color: #333;">Pls allow 48 hours to deliver your order</p>
+                            <p style="color: #333;">Pls allow 48 hours to deliver your order. Check your 
+                            dashboard for details</p>
+                            <p style="color: #333;">Remember to copy the orderId to search the order.</p>
+                            <b>OrderId:<span>${order_id}</span></b>
                             <table role="presentation" border="1" cellspacing="0" cellpadding="10" width="100%" style="border-collapse: collapse; color: #333;">
                               <thead style="background-color: #333; color: #fff;">
                                 <tr>
@@ -176,6 +179,7 @@ exports.sendOrderEmail = async (req, res, next) => {
                             <p style="color: #333;">Subtotal: $80.00</p>
                             <p style="color: #333;">Shipping: $10.00</p>
                             <p style="color: #333;">Total: $90.00</p>
+                            <p style="color: #333;">Phone Number: 08021321212</p>
                             <h3 style="color: #333;">Shipping Address:</h3>
                             <p style="color: #333;">John Doe<br>123 Main Street<br>Your City, State 12345<br>United States</p>
                             <h3 style="color: #333;">Company Details:</h3>
@@ -233,7 +237,10 @@ exports.sendOrderEmail = async (req, res, next) => {
                     <td style="padding: 20px;">
                       <div style="background-color: #fff; padding: 20px;">
                         <h2 style="color: #333;"> You have an order!</h2>
-                        <p style="color: #333;">Pls allow 48 hours to deliver your order</p>
+                        <p style="color: #333;">Pls allow 48 hours to deliver your order. Check your 
+                            dashboard for details</p>
+                            <p style="color: #333;">Remember to copy the orderId to search the order.</p>
+                            <b>OrderId:<span>${order_id}</span></b>
                         <table role="presentation" border="1" cellspacing="0" cellpadding="10" width="100%" style="border-collapse: collapse; color: #333;">
                           <thead style="background-color: #333; color: #fff;">
                             <tr>
@@ -262,6 +269,7 @@ exports.sendOrderEmail = async (req, res, next) => {
                         <p style="color: #333;">Subtotal: $80.00</p>
                         <p style="color: #333;">Shipping: $10.00</p>
                         <p style="color: #333;">Total: $90.00</p>
+                         <p style="color: #333;">Phone Number: 08021321212</p>
                         <h3 style="color: #333;">Shipping Address:</h3>
                         <p style="color: #333;">John Doe<br>123 Main Street<br>Your City, State 12345<br>United States</p>
                         <h3 style="color: #333;">Company Details:</h3>
