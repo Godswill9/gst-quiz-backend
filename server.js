@@ -7,6 +7,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const database = require("./config/database");
 const buyers = require("./routes/buyer");
+const home = require("./routes/home");
+// const location = require("./config/Location");
 const sellers = require("./routes/seller");
 const products = require("./routes/products");
 const login = require("./routes/login");
@@ -23,6 +25,7 @@ const homepageGoods = require("./routes/homepageGoods");
 const order = require("./routes/order");
 const notification = require("./routes/notifications");
 const service = require("./routes/services");
+const analytics = require("./routes/analytics");
 const multer = require("multer");
 const app = express();
 const server = http.createServer(app);
@@ -52,6 +55,7 @@ app.get("/", (req, res) => {
   res.send("welcome to MY-GIANT-STORE backend system...");
 });
 
+app.use("/api", home);
 app.use("/api", signup);
 app.use("/api", signupSeller);
 app.use("/api", signupAdmin);
@@ -69,6 +73,7 @@ app.use("/api", order);
 app.use("/api", whatsappEmailOrder);
 app.use("/api", service);
 app.use("/api", notification);
+app.use("/api", analytics);
 
 const port = process.env.PORT || 3000;
 console.log(new Date());

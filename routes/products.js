@@ -23,10 +23,10 @@ const multer = require("multer");
 //POST A Product
 route.post("/postProduct", authenticate, postProduct);
 
-route.get("/allProducts", authenticate, getAllProducts);
+route.get("/allProducts", getAllProducts);
 
-//getting a random Product
-route.get("/Product/:id", authenticate, getProductById);
+//getting a random Products
+route.get("/Product/:id", getProductById);
 
 //getting a Sellers Products
 route.get("/myProducts/:id", getSellersProducts);
