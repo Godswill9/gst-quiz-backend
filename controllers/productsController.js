@@ -115,7 +115,7 @@ exports.postProduct = (req, res, next) => {
   } catch (e) {
     console.log(e);
   }
-}; 
+};
 
 // Get all Products
 exports.getAllProducts = async (req, res, next) => {
@@ -174,7 +174,7 @@ exports.getAllProducts = async (req, res, next) => {
 
 // Get a specific Product by ID
 exports.getProductById = (req, res, next) => {
-  try { 
+  try {
     const { id } = req.params;
     const query = "SELECT * FROM all_products WHERE product_id=?";
     console.log(id);
@@ -286,6 +286,17 @@ exports.deleteProduct = async (req, res, next) => {
         res.status(500).send({ message: "An error occurred" });
       } else {
         console.log(productDeleteResult);
+
+        //delete from homepage
+        var deleteHomepageQuery = `DELETE FROM allhomepage WHERE productId = '${id}';`;
+        database.query(deleteHomepageQuery, (err, result) => {
+          if (err) {
+            console.error(err); // Log the error to the console
+            res.status(500).send({ message: "An error occurred" });
+          } else {
+            // console.log(result);
+          }
+        });
 
         // Delete image records associated with the product from the database
         var deleteImgQuery = `DELETE FROM all_images WHERE product_id = '${id}'`;

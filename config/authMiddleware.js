@@ -10,7 +10,7 @@ const signup = async (req, res, next) => {
     console.log("no body");
     return;
   }
-  console.log(req.body);
+  // console.log(req.body);
   var userId = v4();
   // console.log(req.body)
   var date = new Date();

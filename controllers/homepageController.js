@@ -234,3 +234,24 @@ exports.deleteFromHomePage = async (req, res, next) => {
     next(err);
   }
 };
+
+// //delete all homepage appearance
+exports.deleteAllItemFromHomePage = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    var deleteQuery = `DELETE FROM allhomepage WHERE productId = '${id}';`;
+    database.query(deleteQuery, (err, result) => {
+      if (err) {
+        console.error(err); // Log the error to the console
+        res.status(500).send({ message: "An error occurred" });
+      } else {
+        // console.log(result);
+        res
+          .status(200)
+          .json({ message: "item removed from homepage", result: result });
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+};

@@ -7,6 +7,7 @@ const {
   getAllSellersHomeProducts,
   checkProduct,
   deleteFromHomePage,
+  deleteAllItemFromHomePage,
 } = require("../controllers/homepageController");
 const route = express.Router();
 
@@ -19,6 +20,12 @@ route.delete(
   "/removeFromHomepage/:id/:title",
   authenticate,
   deleteFromHomePage
+);
+
+route.delete(
+  "/removeFromHomepage/:id",
+  authenticate,
+  deleteAllItemFromHomePage
 );
 
 route.post("/checkMe", authenticate, checkProduct);

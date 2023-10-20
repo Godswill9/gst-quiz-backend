@@ -47,6 +47,10 @@ exports.sendOrderEmail = async (req, res, next) => {
         res.send({ message: "no orders" });
       } else {
         const separatedOrdersBySeller = separateItemsById(result);
+        var totalAmount = result?.reduce(
+          (total, item) => total + item.amount * item.item_quantity,
+          0
+        );
 
         //sending email to the buyer
         let info = transporter
@@ -78,24 +82,23 @@ exports.sendOrderEmail = async (req, res, next) => {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>Product 1</td>
-                          <td>2</td>
-                          <td>$25.00</td>
-                          <td>$50.00</td>
-                        </tr>
-                        <tr>
-                          <td>Product 2</td>
-                          <td>1</td>
-                          <td>$30.00</td>
-                          <td>$30.00</td>
-                        </tr>
-                        <!-- Add more rows for additional products -->
+                      ${result.map((item, i) => {
+                        return `<tr>
+                            <td>${item.item_name}</td>
+                            <td>${item.quantity}</td>
+                            <td>$${item.amount}</td>
+                            <td>$${
+                              Number(item.quantity) * Number(item.amount)
+                            }</td>
+                          </tr>`;
+                      })}
                       </tbody>
                     </table>
-                    <p style="color: #333;">Subtotal: $80.00</p>
+                    <p style="color: #333;">Subtotal: $${totalAmount}</p>
                     <p style="color: #333;">Shipping: $10.00</p>
-                    <p style="color: #333;">Total: $90.00</p>
+                    <p style="color: #333;">Total: $${
+                      Number(totalAmount) + 10
+                    }</p>
                     <h3 style="color: #333;">Shipping Address:</h3>
                     <p style="color: #333;">John Doe<br>123 Main Street<br>Your City, State 12345<br>United States</p>
                     <h3 style="color: #333;">Company Details:</h3>
@@ -122,17 +125,17 @@ exports.sendOrderEmail = async (req, res, next) => {
           separatedOrdersBySeller.forEach((seller, i) => {
             console.log(seller[0].seller_id);
             const querySeller = `SELECT * FROM all_sellers WHERE id = '${seller[0].seller_id}';`;
-            database.query(query, (err, result) => {
+            database.query(query, (err, resultSeller) => {
               if (err) throw err;
-              if (result.length == 0) {
+              if (resultSeller.length == 0) {
                 console.log("no sellers");
                 return;
               } else {
-                console.log(result[0].email);
+                console.log(resultSeller[0].email);
                 let info = transporter
                   .sendMail({
                     from: '"Uchechukwu" <guche9@gmail.com>', // sender address
-                    to: `${result[0].email}`, // list of receivers
+                    to: `${resultSeller[0].email}`, // list of receivers
                     subject: "Devout Store", // Subject line
                     // text: "Hello world?", // plain text body
                     html: `
@@ -151,36 +154,7 @@ exports.sendOrderEmail = async (req, res, next) => {
                             dashboard for details</p>
                             <p style="color: #333;">Remember to copy the orderId to search the order.</p>
                             <b>OrderId:<span>${order_id}</span></b>
-                            <table role="presentation" border="1" cellspacing="0" cellpadding="10" width="100%" style="border-collapse: collapse; color: #333;">
-                              <thead style="background-color: #333; color: #fff;">
-                                <tr>
-                                  <th>Product</th>
-                                  <th>Quantity</th>
-                                  <th>Price</th>
-                                  <th>Total</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>Product 1</td>
-                                  <td>2</td>
-                                  <td>$25.00</td>
-                                  <td>$50.00</td>
-                                </tr>
-                                <tr>
-                                  <td>Product 2</td>
-                                  <td>1</td>
-                                  <td>$30.00</td>
-                                  <td>$30.00</td>
-                                </tr>
-                                <!-- Add more rows for additional products -->
-                              </tbody>
-                            </table>
-                            <p style="color: #333;">Subtotal: $80.00</p>
-                            <p style="color: #333;">Shipping: $10.00</p>
-                            <p style="color: #333;">Total: $90.00</p>
-                            <p style="color: #333;">Phone Number: 08021321212</p>
-                            <h3 style="color: #333;">Shipping Address:</h3>
+
                             <p style="color: #333;">John Doe<br>123 Main Street<br>Your City, State 12345<br>United States</p>
                             <h3 style="color: #333;">Company Details:</h3>
                             <p style="color: #333;">Devout store<br>23, Church Street<br>Shasha, Lagos State 54321<br>Nigeria<br>Phone: (234) 456-7890</p>
@@ -251,25 +225,24 @@ exports.sendOrderEmail = async (req, res, next) => {
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <td>Product 1</td>
-                              <td>2</td>
-                              <td>$25.00</td>
-                              <td>$50.00</td>
-                            </tr>
-                            <tr>
-                              <td>Product 2</td>
-                              <td>1</td>
-                              <td>$30.00</td>
-                              <td>$30.00</td>
-                            </tr>
-                            <!-- Add more rows for additional products -->
-                          </tbody>
+                          ${result.map((item, i) => {
+                            return `<tr>
+                                <td>${item.item_name}</td>
+                                <td>${item.quantity}</td>
+                                <td>$${item.amount}</td>
+                                <td>$${
+                                  Number(item.quantity) * Number(item.amount)
+                                }</td>
+                              </tr>`;
+                          })}
+                           </tbody>
                         </table>
-                        <p style="color: #333;">Subtotal: $80.00</p>
+                        <p style="color: #333;">Subtotal: $${totalAmount}</p>
                         <p style="color: #333;">Shipping: $10.00</p>
-                        <p style="color: #333;">Total: $90.00</p>
-                         <p style="color: #333;">Phone Number: 08021321212</p>
+                        <p style="color: #333;">Total: $${
+                          Number(totalAmount) + 10
+                        }</p>
+                        <p style="color: #333;">Phone Number:${result.phone}</p>
                         <h3 style="color: #333;">Shipping Address:</h3>
                         <p style="color: #333;">John Doe<br>123 Main Street<br>Your City, State 12345<br>United States</p>
                         <h3 style="color: #333;">Company Details:</h3>
