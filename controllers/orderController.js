@@ -131,6 +131,69 @@ exports.createNewOrder = async (req, res, next) => {
   }
 };
 
+exports.fetchAllOrders = async (req, res, next) => {
+  try {
+    const query = `SELECT * FROM all_orders;`;
+    database.query(query, (err, result) => {
+      if (err) throw err;
+      if (result.length == 0) {
+        res.send({ message: "no orders" });
+      } else {
+        res.send(result);
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+exports.fetchMyOrdersBuyers = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const query = `SELECT * FROM all_orders WHERE buyer_id = '${id}';`;
+
+    // Use a promise to handle the initial query
+    const orders = await new Promise((resolve, reject) => {
+      database.query(query, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+
+    if (orders.length === 0) {
+      return res.send({ message: "no orders" });
+    }
+
+    // Create an array of promises for fetching images
+    const imagePromises = orders.map((item) => {
+      const findImage = `SELECT * FROM all_images WHERE product_id= '${item.item_id}';`;
+      return new Promise((resolve, reject) => {
+        database.query(findImage, (err, resultImg) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(resultImg[0]);
+          }
+        });
+      });
+    });
+
+    // Wait for all image queries to complete
+    const images = await Promise.all(imagePromises);
+
+    // Combine order data with image data
+    const ordersWithImages = orders.map((order, index) => {
+      return { order, img: images[index] };
+    });
+
+    res.send({ orders: ordersWithImages });
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.fetchMyOrders = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -151,6 +214,8 @@ exports.fetchMyOrders = async (req, res, next) => {
 exports.updateAnOrder = async (req, res, next) => {
   const { item_id } = req.body;
   const { id } = req.params;
+
+  console.log(item_id);
   try {
     var query = `UPDATE all_orders SET status = 'DELIVERED' WHERE  seller_id = '${id}' AND item_id = '${item_id}';`;
     database.query(query, (err, result) => {

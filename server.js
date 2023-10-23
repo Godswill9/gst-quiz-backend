@@ -25,6 +25,7 @@ const homepageGoods = require("./routes/homepageGoods");
 const order = require("./routes/order");
 const notification = require("./routes/notifications");
 const service = require("./routes/services");
+const withdraw = require("./routes/withdrawals");
 const analytics = require("./routes/analytics");
 const multer = require("multer");
 const app = express();
@@ -33,7 +34,11 @@ const io = socketIO(server);
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "http://localhost:5175",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -74,6 +79,7 @@ app.use("/api", whatsappEmailOrder);
 app.use("/api", service);
 app.use("/api", notification);
 app.use("/api", analytics);
+app.use("/api", withdraw);
 
 const port = process.env.PORT || 3000;
 console.log(new Date());

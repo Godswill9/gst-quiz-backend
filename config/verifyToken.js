@@ -12,6 +12,7 @@ const authenticate = async (req, res, next) => {
         res.send({ message: "login first" });
         return;
       } else {
+        // res.send(user);
         // req.userId = user.id;
         next();
       }
