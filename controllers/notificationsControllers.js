@@ -132,7 +132,7 @@ exports.createBuyerNotification = async (req, res, next) => {
         return;
       }
       if (result.length > 0) {
-        const createNotification = `INSERT INTO all_Notifications (
+        const createNotification = `INSERT INTO all_notifications (
             id, 
             Title,
             details,

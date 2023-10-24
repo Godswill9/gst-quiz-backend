@@ -1,5 +1,5 @@
 const express = require("express");
-const { authenticate } = require("../config/verifyToken");
+const { authenticate } = require("../config/verifyAdmin");
 const {
   addToCart,
   getAllCarts,

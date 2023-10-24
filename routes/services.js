@@ -4,9 +4,10 @@ const {
   sendServiceOrder,
 } = require("../controllers/servicesControllers");
 const { authenticate } = require("../config/verifyToken");
+const { authenticateUser } = require("../config/verifyAdmin2");
 const route = express.Router();
 
-route.post("/requestService", authenticate, sendServiceRequest);
-route.post("/recieveServiceEmail", authenticate, sendServiceOrder);
+route.post("/requestService", authenticateUser, sendServiceRequest);
+route.post("/recieveServiceEmail", authenticateUser, sendServiceOrder);
 
 module.exports = route;

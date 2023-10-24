@@ -197,6 +197,7 @@ exports.fetchMyOrdersBuyers = async (req, res, next) => {
 exports.fetchMyOrders = async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log(id);
     const query = `SELECT * FROM all_orders WHERE seller_id = '${id}';`;
     database.query(query, (err, result) => {
       if (err) throw err;

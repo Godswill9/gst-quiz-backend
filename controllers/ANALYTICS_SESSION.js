@@ -11,10 +11,10 @@ exports.createSession = async (req, res) => {
     const { session_location } = req.body;
 
     const createSessionQuery = `
-        INSERT INTO sessions_analytics (session_id, user_id, session_start, session_location )
-        VALUES (?, ?, ?, ?)
+        INSERT INTO sessions_analytics (session_id, user_id, session_start, session_end, session_location )
+        VALUES (?, ?, ?, ?, ?)
       `;
-    const values = [sessionId, "", date, "", session_location];
+    const values = [sessionId, "", date, date, "", session_location];
 
     database.query(createSessionQuery, values, (err, result) => {
       if (err) {

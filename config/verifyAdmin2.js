@@ -1,10 +1,12 @@
 const jwt = require("jsonwebtoken");
 
-const authenticate = async (req, res, next) => {
-  var cookie = req.cookies.jwt;
+const authenticateUser = async (req, res, next) => {
+  var cookie = req.cookies.jwt_buyer;
+  // var { cookie } = req.body;
+  // console.log(req.cookies.jwt);
   if (!cookie) {
-    res.json({ message: "login first" });
-    console.log({ message: "login first" });
+    res.json({ message: "login again" });
+    console.log({ message: "login again" });
   } else {
     jwt.verify(cookie, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
       if (err) {
@@ -12,12 +14,10 @@ const authenticate = async (req, res, next) => {
         res.status(400).send({ message: "login first" });
         return;
       } else {
-        // res.send(user);
-        // req.userId = user.id;
+        req.userId = user.id;
         next();
       }
     });
   }
 };
-
-module.exports = { authenticate };
+module.exports = { authenticateUser };

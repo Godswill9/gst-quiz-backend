@@ -83,7 +83,17 @@ exports.addToflashsales = async (req, res, next) => {
             res.status(500).json({ message: "Internal server error" });
             return;
           }
-
+          // const query3 = "SELECT * FROM all_products WHERE product_id=?";
+          // database.query(query3, [productId], (err, resultProduct) => {
+          //   if (err) throw err;
+          //   var query4 = `UPDATE all_products SET item_price=${
+          //     Number(resultProduct[0].item_price) -
+          //     Number(resultProduct[0].item_price) * Number(percentage) * 0.01
+          //   } WHERE product_id = '${productId}';`;
+          //   database.query(query4, (err, result) => {
+          //     if (err) throw err;
+          //   });
+          // });
           // console.log(result);
           res.status(200).json({ message: "Item added to the homepage" });
         });

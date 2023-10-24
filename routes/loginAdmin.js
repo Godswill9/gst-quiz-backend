@@ -1,6 +1,6 @@
 const express = require("express");
 const { login } = require("../config/authenticateAdmin");
-const { authenticate } = require("../config/verifyAdmin");
+const { authenticate } = require("../config/verifyToken");
 const route = express.Router();
 
 route.post("/loginAdmin", login);

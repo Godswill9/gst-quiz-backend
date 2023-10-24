@@ -216,7 +216,7 @@ const login = async (req, res, next) => {
                     process.env.ACCESS_TOKEN_SECRET,
                     { expiresIn: "10d" }
                   );
-                  res.cookie("jwt", accessToken, {
+                  res.cookie("jwt_buyer", accessToken, {
                     maxAge: 3600 * 1000 * 24 * 365 * 100,
                     withCredentials: true,
                     httpOnly: true,

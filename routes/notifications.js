@@ -1,5 +1,6 @@
 const express = require("express");
 const { authenticate } = require("../config/verifyToken");
+const { authenticateUser } = require("../config/verifyAdmin2");
 const {
   getAllBuyerNotifications,
   getAllSellerNotifications,
@@ -11,13 +12,21 @@ const {
 } = require("../controllers/notificationsControllers");
 const route = express.Router();
 
-route.post("/newBuyerNotification", authenticate, createBuyerNotification);
-route.post("/newSellerNotification", authenticate, createSellerNotification);
+route.post("/newBuyerNotification", authenticateUser, createBuyerNotification);
+route.post(
+  "/newSellerNotification",
+  authenticateUser,
+  createSellerNotification
+);
 route.put("/updateSellerNotification", authenticate, updateNotificationSeller);
-route.put("/updateBuyerNotification", authenticate, updateNotificationBuyer);
+route.put(
+  "/updateBuyerNotification",
+  authenticateUser,
+  updateNotificationBuyer
+);
 route.get(
   "/getBuyerNotifications/:buyerId",
-  authenticate,
+  authenticateUser,
   getAllBuyerNotifications
 );
 route.get(
